@@ -106,6 +106,7 @@ footer{text-align:center;font-size:12px;color:var(--suave);margin-top:22px}
 .chip{font-size:12px;font-weight:700;border-radius:8px;padding:5px 9px;background:#F2F2F2;color:#333}
 .chip.cafe{background:var(--creme);color:#4A3223}
 .chip.kit{background:var(--verde-claro);color:var(--verde-esc)}
+.chip.aviso{background:#FFF1CC;color:#6B4A00}
 .chip.kit.exec{background:var(--verde-esc);color:#fff}
 .leg-sem{margin-top:18px;background:#fff;border:1px solid var(--cinza);border-radius:14px;padding:0 14px}
 .leg-sem summary{min-height:48px;display:flex;align-items:center;font-size:14px;font-weight:700;color:var(--verde-esc);cursor:pointer}
@@ -210,20 +211,20 @@ footer{text-align:center;font-size:12px;color:var(--suave);margin-top:22px}
     {d:3,cat:'evento',tipo:'Ação',titulo:'Captação e Padronização de Cortes',desc:'Aves + Bovinos',hora:'7h30 às 12h30',equipe:'Qualidade, Planejamento e Tecnologia'},
     {d:5,cat:'evento',tipo:'Produção',titulo:'Produção de eventos',desc:'Ferracini + Arizona e 12 marmitas CrediCocapec',hora:'Horário de entrega a confirmar'},
     {d:6,cat:'evento',tipo:'Evento',titulo:'Almoço Diretoria Cevasa',equipe:'Amanda, Adriano, Marlene e Rafael'},
-    {d:7,cat:'fixa',tipo:'Reunião fixa',titulo:'Consultoria Elisa + DP',hora:'8h às 13h30'},
+    {d:7,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa + DP · Gisele e Logística',hora:'8h às 13h30 (Elisa + DP) · 14h às 17h (Gisele)'},
     {d:8,cat:'ferias',titulo:'Início das férias · Maria Olívia',desc:'Até 25/10'},
     {d:9,cat:'evento',tipo:'Dia do Açougueiro',com:true,titulo:'Ação comemorativa',desc:'Dia do Açougueiro + Dia do Auxiliar Administrativo',hora:'15h',local:'Sala de Treinamento (Democrata)'},
     {d:9,cat:'ferias',titulo:'Início das férias · Lauane',desc:'Retorno em 21/10'},
     {d:12,cat:'feriado',tipo:'Feriado nacional',titulo:'Nossa Senhora Aparecida'},
-    {d:14,cat:'fixa',tipo:'Reunião fixa',titulo:'Consultoria Elisa + DP',hora:'8h às 13h30'},
+    {d:14,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa + DP · Gisele e Logística',hora:'8h às 13h30 (Elisa + DP) · 14h às 17h (Gisele)'},
     {d:15,cat:'treino',tipo:'Dia do Auxiliar Administrativo',com:true,titulo:'Treinamento LGPD',hora:'14h às 14h30',local:'Online, pelo Google Meet'},
     {d:21,cat:'ferias',titulo:'Retorno das férias · Lauane'},
-    {d:21,cat:'fixa',tipo:'Reunião fixa',titulo:'Consultoria Elisa + DP',hora:'8h às 13h30'},
+    {d:21,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa + DP · Gisele e Logística',hora:'8h às 13h30 (Elisa + DP) · 14h às 17h (Gisele)'},
     {d:22,cat:'treino',tipo:'Planejamento',titulo:'Planejamento Cronograma 2027',hora:'9h às 12h',equipe:'Qualidade, Gestão de Pessoas, Financeiro, Planejamento e Tecnologia'},
     {d:25,cat:'ferias',titulo:'Último dia de férias · Maria Olívia'},
     {d:26,cat:'ferias',titulo:'Início das férias · Adriano',desc:'Até 08/11'},
     {d:28,cat:'ferias',titulo:'Início das férias · Maria Paula',desc:'Até 03/11'},
-    {d:28,cat:'fixa',tipo:'Reunião fixa',titulo:'Consultoria Elisa + DP',hora:'8h às 13h30'}
+    {d:28,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa + DP · Gisele e Logística',hora:'8h às 13h30 (Elisa + DP) · 14h às 17h (Gisele)'}
   ];
   var cores = {evento:'#B07A52',fixa:'#00906D',treino:'#00614C',feriado:'#8C8C8C'};
   var semanas = [[1,3],[4,10],[11,17],[18,24],[25,31]];
@@ -318,17 +319,22 @@ footer{text-align:center;font-size:12px;color:var(--suave);margin-top:22px}
       {data:[2026,9,29], titulo:'Treinamento de Integração e Onboarding', obs:'Finalizado e estruturado', local:'Sala de Treinamento', setores:'Gestão de Pessoas, Qualidade, SST e Departamento Pessoal', hora:'07:30 às 09:30', formato:'Presencial', convidados:7, cafe:'Café simples', kit:'Kit geral'},
       {data:[2026,9,30], titulo:'Reuniões fixas: Consultoria Elisa', local:'Sala de Treinamento', setores:'Gestão de Pessoas', hora:'08:00 às 13:30', formato:'Presencial', convidados:3, cafe:'Café simples', kit:'Kit geral'},
       {data:[2026,9,30], titulo:'Reuniões fixas: Gisele e Logística', local:'Sala de Treinamento', setores:'Logística e Compras', hora:'14:00 às 17:00', formato:'Presencial', convidados:6, cafe:'Café simples', kit:'Kit geral'}
+    ]},
+    {nome:'Semana 41', datas:'05/10 a 09/10/2026', reunioes:[
+      {data:[2026,10,7], titulo:'Reuniões fixas: Consultoria Elisa + DP', local:'Sala de Treinamento', setores:'Gestão de Pessoas e Departamento Pessoal', hora:'08:00 às 13:30', formato:'Presencial', convidados:3, cafe:'Café simples', kit:'Kit geral'},
+      {data:[2026,10,7], titulo:'Reuniões fixas: Gisele e Logística', local:'Sala de Treinamento', setores:'Logística e Compras', hora:'14:00 às 17:00', formato:'Presencial', convidados:6, cafe:'Café simples', kit:'Kit geral'},
+      {data:[2026,10,9], titulo:'Ação comemorativa: Dia do Açougueiro + Dia do Auxiliar Administrativo', local:'Sala de Treinamento (Democrata)', setores:'Açougue e Administrativo · execução Adriano e Fatinha', hora:'A partir das 15:00', formato:'Presencial', convidados:12, cafe:'Café especial', kit:'Kit a confirmar'}
     ]}
   ];
   var DIAS = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
   var hojeZero = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate()).getTime();
   var semIdx = 0;
   // abre na semana atual, se existir
-  semanasSala.forEach(function(s,i){
-    var ts = s.reunioes.map(function(r){return new Date(r.data[0],r.data[1]-1,r.data[2]).getTime()});
-    var ini = Math.min.apply(null,ts), fim = Math.max.apply(null,ts);
-    if (hojeZero >= ini - 3*864e5 && hojeZero <= fim + 3*864e5) semIdx = i;
-  });
+  semIdx = semanasSala.length-1;
+  for (var si=0; si<semanasSala.length; si++){
+    var fimS = Math.max.apply(null, semanasSala[si].reunioes.map(function(r){return new Date(r.data[0],r.data[1]-1,r.data[2]).getTime()}));
+    if (fimS >= hojeZero){ semIdx = si; break; }
+  }
 
   function renderSemana(){
     var s = semanasSala[semIdx];
@@ -353,7 +359,7 @@ footer{text-align:center;font-size:12px;color:var(--suave);margin-top:22px}
           + (r.obs?'<p class="desc" style="font-size:13px;color:var(--suave)">'+esc(r.obs)+'</p>':'')
           + '<div class="linha">'+IC.local+'<span>'+esc(r.local)+'</span></div>'
           + '<div class="linha">'+IC.equipe+'<span>'+esc(r.setores)+'</span></div>'
-          + '<div class="chips"><span class="chip">'+r.convidados+' convidados</span><span class="chip cafe">'+esc(r.cafe)+'</span><span class="chip kit'+(/execut/i.test(r.kit)?' exec':'')+'">'+esc(r.kit)+'</span></div>'
+          + '<div class="chips"><span class="chip">'+r.convidados+' convidados</span><span class="chip cafe">'+esc(r.cafe)+'</span><span class="chip kit'+(/execut/i.test(r.kit)?' exec':'')+'">'+esc(r.kit)+'</span>'+(r.aviso?'<span class="chip aviso">'+esc(r.aviso)+'</span>':'')+'</div>'
           + '</article>';
       });
       out += '</section>';
