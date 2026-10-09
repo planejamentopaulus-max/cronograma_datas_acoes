@@ -166,6 +166,7 @@ footer{text-align:center;font-size:12px;color:var(--suave);margin-top:22px}
 #camada .plantao h3{margin:0 0 8px;font-size:15px}
 #camada .plantao ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
 #camada .plantao li{display:flex;justify-content:space-between;gap:10px;font-size:14px;background:rgba(255,255,255,.1);border-radius:9px;padding:8px 10px}
+#camada .plantao li .eq{display:block;font-size:12px;font-weight:600;opacity:.9;text-align:left;margin-top:2px}
 #camada .plantao li span{font-size:12px;opacity:.9;text-align:right}
 #camada details.setor{background:#fff;border:1px solid var(--cinza);border-radius:14px;margin-bottom:10px;overflow:hidden}
 #camada details.setor summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;min-height:52px;cursor:pointer;font-size:15px;font-weight:700;color:var(--verde-esc)}
@@ -560,29 +561,43 @@ body.travado{overflow:hidden}
 (function(){
   /* ====== FUNCIONAMENTO NOS FERIADOS ======
      status das unidades: t = trabalha · r = trabalha com redução · n = não trabalha · a = a definir
-     status da equipe:    t = trabalha · f = folga · v = férias · l = licença */
+     status da equipe:    t = trabalha · f = folga · v = férias · l = licença · af = afastada */
   var FERIADOS = {
     '2026-10-12': {
       nome:'Nossa Senhora Aparecida',
       unidades:[
-        ['Anatomic','n','Folga segunda'],['Arizona','n'],['Atonal','n'],['Cocapec','n'],['Della Torre','n'],
-        ['Democrata','n'],['Difiorenna','n','Folga segunda'],['Dikka','n'],
-        ['Eva Sola','t','Previsão de marmita · quantidade a confirmar'],
-        ['Ferracini','n'],['Flormel','n'],['Focal','n'],
-        ['Gelco','r','Redução de 30 pessoas'],
-        ['J Arantes','n'],
-        ['Jussara','r','Redução do administrativo'],
-        ['Rochfer','n'],
-        ['Cevasa','a','Não informado'],['Couroquímica','a','Não informado'],['JBS','a','Não informado'],['Nino','a','Não informado']
+        ['Cevasa','r','Equipe reduzida'],
+        ['Gelco','r','Equipe reduzida · base das marmitas'],
+        ['Jussara','r','Equipe reduzida · base do jantar Eva Sola'],
+        ['Eva Sola · almoço','a','Marmita, se houver'],
+        ['Eva Sola · jantar','a','Marmita, se houver'],
+        ['JBS · almoço e jantar','a','A confirmar'],
+        ['Anatomic','n'],['Arizona','n'],['Atonal','n'],['Cocapec','n'],['Couroquímica','n'],
+        ['Della Torre','n'],['Democrata','n'],['Difiorenna','n'],['Dikka','n'],['Ferracini','n'],
+        ['Flormel','n'],['Focal','n'],['J Arantes','n'],['Nino','n'],['Rochfer','n']
       ],
-      marmitas:[{titulo:'Marmitas · Eva Sola', saida:'A definir', condicional:'Previsão', itens:[]}],
-      avisoEquipe:'Escala da equipe ainda não informada. Por enquanto, só a escala da Jussara.',
-      equipe:[{setor:'Nutricionistas e Técnico de Nutrição', pessoas:[['Amanda','t','Jussara'],['Kamilly','f','Jussara']]}]
+      marmitas:[
+        {titulo:'Marmitas do almoço · Eva Sola', saida:'Gelco', condicional:'Se houver', itens:[]},
+        {titulo:'Marmitas do jantar · Eva Sola', saida:'Jussara', condicional:'Se houver', itens:[]}
+      ],
+      equipe:[
+        {setor:'Nutricionistas e Técnico de Nutrição', pessoas:[
+          ['Amanda Franco','t'],['Amanda Clemente','f'],['Camila Castro','af'],['Camila Tiburcio','f'],
+          ['Carolina Utzig','f'],['Dylyiene Silveira','f'],['Elisiane Ferreira','f'],['Flavia Moscardini','af'],
+          ['Igor','t','Na Cevasa · folga no sábado 10/10'],['Jéssica Braguim','f'],['Jéssica Machado','f'],['Kamilly','f'],
+          ['Mara Rezende','t'],['Maria Olivia Ferraz','f'],['Mariana Malta','f'],['Tais Pereira','f']
+        ]},
+        {setor:'Logística e Motoristas', pessoas:[['Gregor','t'],['João','f'],['Bruno','f'],['Tiago','f'],['Gilmar','f'],['José','f']]},
+        {setor:'Compras', pessoas:[['Murilo','f']]},
+        {setor:'Açougue', pessoas:[['Fabrício','f'],['Victor','f'],['Ronaldo','f']]},
+        {setor:'Planejamento e Suporte', pessoas:[['Adriano','f'],['Heitor','f'],['Rafael','f']]},
+        {setor:'RH e DP', pessoas:[['Fatinha','f'],['Lauane','v'],['Isadora','f'],['Isabely','f']]}
+      ]
     }
   };
   var ROT_U = {t:'Trabalha', r:'Com redução', n:'Não trabalha', a:'A definir'};
-  var ROT_E = {t:'Trabalha', f:'Folga', v:'Férias', l:'Licença'};
-  var CLS_E = {t:'t', f:'n', v:'f', l:'l'};
+  var ROT_E = {t:'Trabalha', f:'Folga', v:'Férias', l:'Licença', af:'Afastada'};
+  var CLS_E = {t:'t', f:'n', v:'f', l:'l', af:'l'};
   var SEM = ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
   var DIAS = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
@@ -678,7 +693,7 @@ body.travado{overflow:hidden}
     atual.equipe.forEach(function(s){ s.pessoas.forEach(function(p){ if(p[1]==='t') trab.push([p[0], s.setor, p[2]]); }); });
     var out = atual.avisoEquipe ? '<div class="aviso-eq">'+esc(atual.avisoEquipe)+'</div>' : '';
     out += '<div class="plantao"><h3>Trabalham no feriado ('+trab.length+')</h3><ul>';
-    trab.forEach(function(t){ out += '<li><b>'+esc(t[0])+'</b><span>'+esc(t[2]||t[1])+'</span></li>'; });
+    trab.forEach(function(t){ out += '<li><div><b>'+esc(t[0])+'</b><span class="eq">'+esc(t[1])+'</span></div>'+(t[2]?'<span>'+esc(t[2])+'</span>':'')+'</li>'; });
     out += '</ul></div>';
     atual.equipe.forEach(function(s){
       var n = s.pessoas.filter(function(p){return p[1]==='t'}).length;
