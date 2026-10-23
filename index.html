@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#00906D">
-<title>Cronograma Outubro 2026 · Paulu's</title>
+<title>Cronograma Outubro e Novembro 2026 · Paulu's</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600;700&family=Outfit:wght@800&display=swap">
 <style>
@@ -197,6 +197,11 @@ body.travado{overflow:hidden}
 .leg-disp{display:flex;gap:14px;font-size:12px;color:var(--suave);margin:10px 2px 0}
 .leg-disp span{display:flex;align-items:center;gap:5px}
 .leg-disp i{width:14px;height:10px;border-radius:3px;display:block}
+.mes-nav{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.mes-nav h2{flex:1;text-align:center;margin:0;font-size:20px;color:var(--verde)}
+.nav-btn{appearance:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--verde);background:var(--verde-claro);color:var(--verde-esc);font-size:24px;line-height:1;cursor:pointer}
+.nav-btn:disabled{opacity:.35;cursor:default}
+.nav-btn:focus-visible{outline:2px solid var(--verde-esc);outline-offset:2px}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 </style>
 </head>
@@ -216,18 +221,12 @@ body.travado{overflow:hidden}
   </nav>
 
   <div id="p-mensal" role="tabpanel" aria-labelledby="t-mensal">
-  <div class="rosa">
-    <svg width="30" height="40" viewBox="0 0 48 64" fill="none" aria-hidden="true" style="flex-shrink:0">
-      <path d="M18 22 L36 58" stroke="#B72D63" stroke-width="8"/>
-      <path d="M12 58 L30 22 C34 14 30 6 24 6 C18 6 14 14 18 22" stroke="#E0457B" stroke-width="8" stroke-linejoin="round"/>
-    </svg>
-    <div><strong class="display">Outubro Rosa</strong><span>Mês de conscientização e combate ao câncer de mama</span></div>
-  </div>
+  <div id="banner"></div>
 
   <div class="hoje-box" id="hojeBox" hidden></div>
 
   <section class="card" aria-labelledby="t-mes">
-    <h2 id="t-mes">Visão do mês</h2>
+    <div class="mes-nav"><button class="nav-btn" id="mAnt" aria-label="Mês anterior">‹</button><h2 id="t-mes" class="display"></h2><button class="nav-btn" id="mProx" aria-label="Próximo mês">›</button></div>
     <div class="mes-cab" aria-hidden="true"><div>D</div><div>S</div><div>T</div><div>Q</div><div>Q</div><div>S</div><div>S</div></div>
     <div class="mes" id="mes"></div>
     <div class="legenda">
@@ -252,7 +251,7 @@ body.travado{overflow:hidden}
 
   <section class="resumo-ferias" aria-labelledby="t-fer">
     <h2 id="t-fer">Férias da equipe</h2>
-    <p><b>Maria Olívia</b>: 13 a 25/10 (retorno em 26/10)<br><b>Lauane</b>: 09 a 20/10 (retorno em 21/10)<br><b>Adriano</b>: 26/10 a 08/11<br><b>Maria Paula</b>: 27/10 a 03/11</p>
+    <p id="resumoFerias"></p>
   </section>
 
   </div>
@@ -313,87 +312,138 @@ body.travado{overflow:hidden}
   };
   var DS = ['DOM','SEG','TER','QUA','QUI','SEX','SÁB'];
   // cat: evento | fixa | treino | feriado | ferias
-  var itens = [
-    {d:3,cat:'evento',tipo:'Ação',titulo:'Captação e Padronização de Cortes',desc:'Aves + Bovinos',hora:'7h30 às 12h30',equipe:'Qualidade, Planejamento e Tecnologia'},
-    {d:5,cat:'evento',tipo:'Produção',titulo:'Produção de eventos',desc:'Ferracini + Arizona e 12 marmitas CrediCocapec',hora:'Horário de entrega a confirmar'},
-    {d:6,cat:'evento',tipo:'Evento',titulo:'Almoço Diretoria Cevasa',equipe:'Amanda, Adriano, Marlene e Rafael'},
-    {d:7,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa + DP · Gisele e Logística',hora:'8h às 13h30 (Elisa + DP) · 14h às 17h (Gisele)'},
-    {d:8,cat:'evento',tipo:'Ação especial',titulo:'Ação comemorativa · Dia do Açougueiro + Dia do Auxiliar Administrativo',desc:'Data alterada de 09/10 para 08/10',hora:'Horário a confirmar (antes: 15h)',local:'Sala de Treinamento (Democrata)'},
-    {d:9,cat:'evento',tipo:'Data comemorativa',com:true,titulo:'Dia do Açougueiro'},
-    {d:9,cat:'ferias',titulo:'Início das férias · Lauane',desc:'Retorno em 21/10'},
-    {d:12,cat:'feriado',tipo:'Feriado nacional',titulo:'Nossa Senhora Aparecida',feriado:'2026-10-12'},
-    {d:13,cat:'ferias',titulo:'Início das férias · Maria Olívia',desc:'Até 25/10 · retorno em 26/10'},
-    {d:14,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa + DP · Gisele e Logística',hora:'8h às 13h30 (Elisa + DP) · 14h às 17h (Gisele)'},
-    {d:15,cat:'treino',tipo:'Dia do Auxiliar Administrativo',com:true,titulo:'Treinamento LGPD',hora:'14h às 14h30',local:'Sala de Treinamento'},
-    {d:20,cat:'treino',tipo:'Integração',titulo:'Integração de Novos Colaboradores',desc:'3 auxiliares de cozinha (Couroquímica e Difiorenna) e 2 gerentes de unidade (Couroquímica e Cocapec)',hora:'8h30 às 9h30',equipe:'DP, Compras, SST, RH e Qualidade',local:'Sala de Treinamento (Democrata)'},
-    {d:21,cat:'ferias',titulo:'Retorno das férias · Lauane'},
-    {d:21,cat:'fixa',tipo:'Reunião fixa',titulo:'Consultoria Elisa + DP',hora:'8h às 13h30'},
-    {d:21,cat:'treino',tipo:'Planejamento',titulo:'Reunião Cronograma Bimestre 2026',hora:'14h às 18h',equipe:'DP, RH, Qualidade, Tecnologia e Dados',local:'Sala de Treinamento (Democrata)'},
-    {d:25,cat:'ferias',titulo:'Último dia de férias · Maria Olívia',desc:'Retorno em 26/10'},
-    {d:26,cat:'ferias',titulo:'Início das férias · Adriano',desc:'Até 08/11'},
-    {d:27,cat:'ferias',titulo:'Início das férias · Maria Paula',desc:'Até 03/11'},
-    {d:27,cat:'treino',tipo:'Integração',titulo:'Integração e Boas Práticas do Novo Colaborador',hora:'7h30 às 9h',local:'Sala de Treinamento'},
-    {d:28,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa + DP · Gisele e Logística',hora:'8h às 13h30 (Elisa + DP) · 14h às 17h (Gisele)'}
+  // ===== Cronograma mensal (vários meses) =====
+  // cat: evento | fixa | treino | feriado | ferias · com:true = data comemorativa
+  var MESES = [
+    {ano:2026, mes:9, nome:'Outubro 2026', abrev:'10',
+     banner:{tema:'rosa', titulo:'Outubro Rosa', texto:'Mês de conscientização e combate ao câncer de mama'},
+     ferias:'<b>Maria Olívia</b>: 13 a 25/10 (retorno em 26/10)<br><b>Lauane</b>: 09 a 20/10 (retorno em 21/10)<br><b>Adriano</b>: 26/10 a 08/11 (retorno em 09/11)<br><b>Maria Paula</b>: 27/10 a 03/11 (retorno em 04/11)',
+     itens:[
+      {d:3,cat:'evento',tipo:'Ação',titulo:'Captação e Padronização de Cortes',desc:'Aves + Bovinos',hora:'7h30 às 12h30',equipe:'Qualidade, Planejamento e Tecnologia'},
+      {d:5,cat:'evento',tipo:'Produção',titulo:'Produção de eventos',desc:'Ferracini + Arizona e 12 marmitas CrediCocapec',hora:'Horário de entrega a confirmar'},
+      {d:6,cat:'evento',tipo:'Evento',titulo:'Almoço Diretoria Cevasa',equipe:'Amanda, Adriano, Marlene e Rafael'},
+      {d:7,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa + DP · Gisele e Logística',hora:'8h às 13h30 (Elisa + DP) · 14h às 17h (Gisele)'},
+      {d:8,cat:'evento',tipo:'Ação especial',titulo:'Ação comemorativa · Dia do Açougueiro + Dia do Auxiliar Administrativo',desc:'Data alterada de 09/10 para 08/10',hora:'Horário a confirmar (antes: 15h)',local:'Sala de Treinamento (Democrata)'},
+      {d:9,cat:'evento',tipo:'Data comemorativa',com:true,titulo:'Dia do Açougueiro'},
+      {d:9,cat:'ferias',titulo:'Início das férias · Lauane',desc:'Retorno em 21/10'},
+      {d:12,cat:'feriado',tipo:'Feriado nacional',titulo:'Nossa Senhora Aparecida',feriado:'2026-10-12'},
+      {d:13,cat:'ferias',titulo:'Início das férias · Maria Olívia',desc:'Até 25/10 · retorno em 26/10'},
+      {d:14,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa + DP · Gisele e Logística',hora:'8h às 13h30 (Elisa + DP) · 14h às 17h (Gisele)'},
+      {d:15,cat:'treino',tipo:'Dia do Auxiliar Administrativo',com:true,titulo:'Treinamento LGPD',hora:'14h às 14h30',local:'Sala de Treinamento'},
+      {d:20,cat:'treino',tipo:'Integração',titulo:'Integração de Novos Colaboradores',desc:'3 auxiliares de cozinha (Couroquímica e Difiorenna) e 2 gerentes de unidade (Couroquímica e Cocapec)',hora:'8h30 às 9h30',equipe:'DP, Compras, SST, RH e Qualidade',local:'Sala de Treinamento (Democrata)'},
+      {d:21,cat:'ferias',titulo:'Retorno das férias · Lauane'},
+      {d:21,cat:'fixa',tipo:'Reunião fixa',titulo:'Consultoria Elisa + DP',hora:'8h às 13h30'},
+      {d:21,cat:'treino',tipo:'Planejamento',titulo:'Reunião Cronograma Bimestre 2026',hora:'14h às 18h',equipe:'DP, RH, Qualidade, Tecnologia e Dados',local:'Sala de Treinamento (Democrata)'},
+      {d:23,cat:'evento',tipo:'Ação especial',titulo:'Almoço Especial · Dia do Sapateiro',hora:'Horário a confirmar'},
+      {d:25,cat:'evento',tipo:'Data comemorativa',com:true,titulo:'Dia do Sapateiro'},
+      {d:25,cat:'ferias',titulo:'Último dia de férias · Maria Olívia',desc:'Retorno em 26/10'},
+      {d:26,cat:'ferias',titulo:'Início das férias · Adriano',desc:'Até 08/11 · retorno em 09/11'},
+      {d:27,cat:'ferias',titulo:'Início das férias · Maria Paula',desc:'Até 03/11 · retorno em 04/11'},
+      {d:28,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa + DP · Gisele e Logística',hora:'8h às 13h30 (Elisa + DP) · 14h às 17h (Gisele)'}
+     ]},
+    {ano:2026, mes:10, nome:'Novembro 2026', abrev:'11',
+     banner:{tema:'azul', titulo:'Novembro Azul', texto:'Mês de conscientização sobre a saúde do homem e prevenção do câncer de próstata'},
+     ferias:'<b>Adriano</b>: 26/10 a 08/11 (retorno em 09/11)<br><b>Maria Paula</b>: 27/10 a 03/11 (retorno em 04/11)<br><b>Tais (Nutricionista)</b>: 23 a 29/11 (retorno em 30/11)',
+     itens:[
+      {d:2,cat:'feriado',tipo:'Feriado nacional',titulo:'Finados'},
+      {d:3,cat:'evento',tipo:'Data comemorativa',com:true,titulo:'Aniversário de parceria · Cevasa'},
+      {d:3,cat:'ferias',titulo:'Último dia de férias · Maria Paula',desc:'Retorno em 04/11'},
+      {d:4,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa · Gisele e Logística/Açougue',hora:'8h30 às 12h30 (Elisa) · 14h às 16h (Gisele)'},
+      {d:8,cat:'ferias',titulo:'Último dia de férias · Adriano',desc:'Retorno em 09/11'},
+      {d:10,cat:'treino',tipo:'Integração',titulo:'Integração e Boas Práticas do Novo Colaborador',hora:'8h às 9h30',equipe:'DP, Compras, RH e Qualidade',local:'Sala de Treinamento'},
+      {d:10,cat:'treino',tipo:'Reunião',titulo:'Reunião Orçamentos e Festas de Final de Ano',desc:'Confraternizações das equipes, orçamentos e brindes para os clientes',hora:'14h às 16h',equipe:'Rafael, Financeiro e Maria Paula',local:'Sala de Treinamento (Democrata)'},
+      {d:11,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa · Gisele e Logística/Açougue',hora:'8h30 às 12h30 (Elisa) · 14h às 16h (Gisele)'},
+      {d:15,cat:'feriado',tipo:'Feriado nacional',titulo:'Proclamação da República'},
+      {d:16,cat:'evento',tipo:'Ação',titulo:'Distribuição das decorações de Natal',desc:'De 16 a 20/11 nas unidades'},
+      {d:16,cat:'evento',tipo:'Data comemorativa',com:true,titulo:'Aniversário de parceria · J Arantes'},
+      {d:18,cat:'evento',tipo:'Entrega',titulo:'Entrega das bonificações · Cesta de Natal',equipe:'Compras'},
+      {d:18,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa · Gisele e Logística/Açougue',hora:'8h30 às 12h30 (Elisa) · 14h às 16h (Gisele)'},
+      {d:20,cat:'feriado',tipo:'Feriado nacional',titulo:'Dia Nacional de Zumbi e da Consciência Negra'},
+      {d:23,cat:'ferias',titulo:'Início das férias · Tais (Nutricionista)',desc:'Até 29/11 · retorno em 30/11'},
+      {d:24,cat:'treino',tipo:'Integração',titulo:'Integração e Boas Práticas do Novo Colaborador',hora:'7h30 às 9h',equipe:'DP, Compras, RH e Qualidade',local:'Sala de Treinamento'},
+      {d:25,cat:'evento',tipo:'Data comemorativa',com:true,titulo:'Dia do Empresário'},
+      {d:25,cat:'fixa',tipo:'Reuniões fixas',titulo:'Consultoria Elisa · Gisele e Logística/Açougue',hora:'8h30 às 12h30 (Elisa) · 14h às 16h (Gisele)'},
+      {d:27,cat:'evento',tipo:'Data comemorativa',com:true,titulo:'Dia do Técnico de Segurança'},
+      {d:27,cat:'evento',tipo:'Ação',titulo:'Aniversariantes do mês',hora:'15h30 às 16h15',equipe:'RH',local:'Sala de Treinamento (Democrata)'},
+      {d:29,cat:'ferias',titulo:'Último dia de férias · Tais (Nutricionista)',desc:'Retorno em 30/11'}
+     ]}
   ];
   var cores = {evento:'#B07A52',fixa:'#00906D',treino:'#00614C',feriado:'#8C8C8C'};
-  var semanas = [[1,3],[4,10],[11,17],[18,24],[25,31]];
-
+  var NOMES_M = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
   var agora = new Date();
-  var hoje = (agora.getFullYear()===2026 && agora.getMonth()===9) ? agora.getDate()
-           : (agora < new Date(2026,9,1) ? 0 : 99);
-
   function dd(n){return (n<10?'0':'')+n}
-  function dow(d){return new Date(2026,9,d).getDay()}
   function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+  var hojeT = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate()).getTime();
+  var mi = 0;
+  MESES.forEach(function(M,i){ if (M.ano===agora.getFullYear() && M.mes===agora.getMonth()) mi = i; });
+  if (hojeT > new Date(MESES[MESES.length-1].ano, MESES[MESES.length-1].mes+1, 0).getTime()) mi = MESES.length-1;
+  var tituloMensal = MESES[mi].nome;
+  var M, itens, filtroAtual = 'todos';
+  function tD(d){ return new Date(M.ano, M.mes, d).getTime(); }
+  function dow(d){ return new Date(M.ano, M.mes, d).getDay(); }
+  function mm(){ return dd(M.mes+1); }
 
-  // Hoje
-  var box = document.getElementById('hojeBox');
-  if (hoje>=1 && hoje<=31){
-    var doDia = itens.filter(function(i){return i.d===hoje});
-    var prox = itens.filter(function(i){return i.d>hoje && i.cat!=='ferias'})[0];
+  function renderBanner(){
+    var b = M.banner, el = document.getElementById('banner');
+    if (!b){ el.innerHTML=''; return; }
+    var cor = b.tema==='azul' ? ['#1F5FA8','#3D7FD1','#E6EFFA','#B9D0EE','#16427A'] : ['#B72D63','#E0457B','#FCE7EF','#F3B6CB','#8E1F4B'];
+    el.innerHTML = '<div class="rosa" style="background:'+cor[2]+';border-color:'+cor[3]+'"><svg width="30" height="40" viewBox="0 0 48 64" fill="none" aria-hidden="true" style="flex-shrink:0"><path d="M18 22 L36 58" stroke="'+cor[0]+'" stroke-width="8"/><path d="M12 58 L30 22 C34 14 30 6 24 6 C18 6 14 14 18 22" stroke="'+cor[1]+'" stroke-width="8" stroke-linejoin="round"/></svg><div><strong class="display" style="color:'+cor[0]+'">'+esc(b.titulo)+'</strong><span style="color:'+cor[4]+'">'+esc(b.texto)+'</span></div></div>';
+  }
+
+  function renderHoje(){
+    var box = document.getElementById('hojeBox');
+    var dentro = agora.getFullYear()===M.ano && agora.getMonth()===M.mes;
+    if (!dentro){ box.hidden = true; return; }
+    var hd = agora.getDate();
+    var doDia = itens.filter(function(i){return i.d===hd});
+    var futuros = [];
+    MESES.forEach(function(X){ X.itens.forEach(function(i){ var t=new Date(X.ano,X.mes,i.d).getTime(); if (t>hojeT && i.cat!=='ferias') futuros.push([t,i,X]); }); });
+    futuros.sort(function(a,b){return a[0]-b[0]});
     var txt = doDia.length ? doDia.map(function(i){return esc(i.titulo)+(i.hora?' ('+esc(i.hora)+')':'')}).join('<br>') : 'Nenhuma ação marcada para hoje.';
-    if (prox) txt += '<br><br><b>Próxima:</b> '+dd(prox.d)+'/10, '+esc(prox.titulo);
-    box.innerHTML = '<h2>Hoje, '+dd(hoje)+'/10</h2><p>'+txt+'</p>';
+    if (futuros.length){ var f=futuros[0]; txt += '<br><br><b>Próxima:</b> '+dd(f[1].d)+'/'+dd(f[2].mes+1)+', '+esc(f[1].titulo); }
+    box.innerHTML = '<h2>Hoje, '+dd(hd)+'/'+mm()+'</h2><p>'+txt+'</p>';
     box.hidden = false;
   }
 
-  // Mini calendário
-  var mes = document.getElementById('mes'), h = '';
-  for (var v=0; v<dow(1); v++) h += '<span class="dia vazio"></span>';
-  for (var d=1; d<=31; d++){
-    var its = itens.filter(function(i){return i.d===d});
-    var p = its.map(function(i){
-      if (i.cat==='ferias') return '<i class="fer" style="background:#7FC7B3"></i>';
-      var s = '';
-      if (i.com) s += '<i style="background:#8A4B2A"></i>';
-      return s + '<i style="background:'+cores[i.cat]+'"></i>';
-    }).join('');
-    var cls = 'dia' + (d<hoje?' passado':'') + (d===hoje?' hoje':'');
-    var bg = its.length && its[0].cat!=='ferias' ? (its[0].cat==='feriado'?'#EDEDED':(its[0].cat==='evento'?'#F7EFE7':'#E3F3EF')) : 'transparent';
-    var fer = its.filter(function(i){return i.feriado})[0];
-    h += '<button class="'+cls+'" style="background:'+bg+'" '+(fer?'data-feriado="'+fer.feriado+'" aria-haspopup="dialog" ':'')+(its.length?'data-ir="'+d+'"':'disabled')+' aria-label="'+d+' de outubro'+(its.length?', '+its.length+' item(ns)':'')+'">'+d+'<span class="pontos">'+p+'</span></button>';
+  function renderCalendario(){
+    var total = new Date(M.ano, M.mes+1, 0).getDate(), h='';
+    for (var v=0; v<dow(1); v++) h += '<span class="dia vazio"></span>';
+    for (var d=1; d<=total; d++){
+      var its = itens.filter(function(i){return i.d===d});
+      var p = its.map(function(i){
+        if (i.cat==='ferias') return '<i class="fer" style="background:#7FC7B3"></i>';
+        return (i.com?'<i style="background:#8A4B2A"></i>':'') + (i.cat==='evento'&&i.com&&!i.hora?'':'<i style="background:'+cores[i.cat]+'"></i>');
+      }).join('');
+      var t = tD(d);
+      var cls = 'dia' + (t<hojeT?' passado':'') + (t===hojeT?' hoje':'');
+      var princ = its.filter(function(i){return i.cat!=='ferias'})[0];
+      var bg = princ ? (princ.cat==='feriado'?'#EDEDED':(princ.cat==='evento'?'#F7EFE7':'#E3F3EF')) : 'transparent';
+      var fer = its.filter(function(i){return i.feriado})[0];
+      h += '<button class="'+cls+'" style="background:'+bg+'" '+(fer?'data-feriado="'+fer.feriado+'" aria-haspopup="dialog" ':'')+(its.length?'data-ir="'+d+'"':'disabled')+' aria-label="'+d+' de '+NOMES_M[M.mes]+(its.length?', '+its.length+' item(ns)':'')+'">'+d+'<span class="pontos">'+p+'</span></button>';
+    }
+    document.getElementById('mes').innerHTML = h;
   }
-  mes.innerHTML = h;
-  mes.addEventListener('click', function(e){
-    var b = e.target.closest('[data-ir]'); if(!b || b.hasAttribute('data-feriado')) return;
-    setFiltro('todos');
-    var alvo = document.querySelector('[data-dia="'+b.getAttribute('data-ir')+'"]');
-    if (alvo) alvo.scrollIntoView({block:'start'});
-  });
 
-  // Agenda
+  function semanasDoMes(){
+    var total = new Date(M.ano, M.mes+1, 0).getDate(), out=[], ini=1;
+    while (ini<=total){ var fim = Math.min(total, ini + (6 - dow(ini))); out.push([ini,fim]); ini = fim+1; }
+    return out;
+  }
+
   var agenda = document.getElementById('agenda');
   function render(f){
+    filtroAtual = f;
     var out = '';
-    semanas.forEach(function(s, idx){
+    semanasDoMes().forEach(function(s, idx){
       var lista = itens.filter(function(i){return i.d>=s[0] && i.d<=s[1] && (f==='todos' || i.cat===f || (f==='evento' && i.cat==='feriado'))});
       if (!lista.length) return;
-      out += '<section class="semana"><h3>Semana '+(idx+1)+' · '+dd(s[0])+' a '+dd(s[1])+'/10</h3>';
+      out += '<section class="semana"><h3>Semana '+(idx+1)+' · '+dd(s[0])+' a '+dd(s[1])+'/'+mm()+'</h3>';
       var marcado = {};
       lista.forEach(function(i){
-        var estado = i.d<hoje?' passado':(i.d===hoje?' hoje':'');
+        var t = tD(i.d);
+        var estado = t<hojeT?' passado':(t===hojeT?' hoje':'');
         var ancora = marcado[i.d] ? '' : ' data-dia="'+i.d+'"'; marcado[i.d]=1;
-        var tagHoje = i.d===hoje ? '<span class="tag-hoje">Hoje</span>' : '';
+        var tagHoje = t===hojeT ? '<span class="tag-hoje">Hoje</span>' : '';
         if (i.cat==='ferias'){
           out += '<article class="item ferias'+estado+'"'+ancora+'><div class="selo"><b>'+dd(i.d)+'</b></div><div class="info"><p class="titulo" style="font-size:15px">'+esc(i.titulo)+tagHoje+'</p>'+(i.desc?'<p class="linha" style="margin:0">'+esc(i.desc)+'</p>':'')+'</div></article>';
           return;
@@ -416,10 +466,28 @@ body.travado{overflow:hidden}
     [].forEach.call(document.querySelectorAll('.filtro'), function(b){b.setAttribute('aria-pressed', b.getAttribute('data-f')===f?'true':'false')});
     render(f);
   }
+
+  function renderMes(){
+    M = MESES[mi]; itens = M.itens; tituloMensal = M.nome;
+    document.getElementById('t-mes').textContent = M.nome;
+    document.getElementById('mAnt').disabled = mi===0;
+    document.getElementById('mProx').disabled = mi===MESES.length-1;
+    if (!document.getElementById('p-mensal').hidden) document.getElementById('cabTitulo').textContent = M.nome;
+    document.getElementById('resumoFerias').innerHTML = M.ferias;
+    renderBanner(); renderHoje(); renderCalendario(); setFiltro('todos');
+  }
+  document.getElementById('mAnt').addEventListener('click', function(){ if(mi>0){mi--;renderMes();} });
+  document.getElementById('mProx').addEventListener('click', function(){ if(mi<MESES.length-1){mi++;renderMes();} });
+  document.getElementById('mes').addEventListener('click', function(e){
+    var b = e.target.closest('[data-ir]'); if(!b || b.hasAttribute('data-feriado')) return;
+    setFiltro('todos');
+    var alvo = document.querySelector('#agenda [data-dia="'+b.getAttribute('data-ir')+'"]');
+    if (alvo) alvo.scrollIntoView({block:'start'});
+  });
   document.getElementById('filtros').addEventListener('click', function(e){
     var b = e.target.closest('.filtro'); if (b) setFiltro(b.getAttribute('data-f'));
   });
-  render('todos');
+  renderMes();
 
   /* ===== Programação semanal da sala de reuniões =====
      Para acrescentar uma semana, copie um bloco {...} dentro de "semanasSala".
@@ -448,10 +516,32 @@ body.travado{overflow:hidden}
       {data:[2026,10,21], ini:'14:00', fim:'18:00', titulo:'Reunião Cronograma Bimestre 2026', obs:'Planejar os dois últimos bimestres: férias, recessos, eventos e custos, cesta e cardápio de Natal', local:'Sala de Treinamento (Democrata)', setores:'DP, RH, Qualidade, Tecnologia e Dados', formato:'Presencial', convidados:7, cafe:'Café a definir', kit:'Kit a definir'}
     ]},
     {nome:'Semana 44', datas:'26/10 a 30/10/2026', dias:[[2026,10,26],[2026,10,27],[2026,10,28],[2026,10,29],[2026,10,30]], reunioes:[
-      {data:[2026,10,27], ini:'07:30', fim:'09:00', titulo:'Integração e Boas Práticas do Novo Colaborador', local:'Sala de Treinamento', setores:'DP, Compras, RH e Qualidade', formato:'Presencial', convidados:5},
       {data:[2026,10,28], ini:'08:00', fim:'13:30', titulo:'Reuniões fixas: Consultoria Elisa + DP', local:'Sala de Treinamento', setores:'Gestão de Pessoas e Departamento Pessoal', formato:'Presencial', convidados:3, cafe:'Café simples', kit:'Kit geral'},
       {data:[2026,10,28], ini:'14:00', fim:'17:00', titulo:'Reuniões fixas: Gisele e Logística', local:'Sala de Treinamento', setores:'Logística e Compras', formato:'Presencial', convidados:6, cafe:'Café simples', kit:'Kit geral'}
-    ]}
+    ]},
+    {nome:'Semana 45', datas:'02/11 a 06/11/2026', dias:[[2026,11,2],[2026,11,3],[2026,11,4],[2026,11,5],[2026,11,6]],
+     fechados:{'2026-11-02':'Feriado · Finados'}, reunioes:[
+      {data:[2026,11,4], ini:'08:30', fim:'12:30', titulo:'Reuniões fixas: Consultoria Elisa', local:'Sala de Treinamento', setores:'Gestão de Pessoas', formato:'Presencial', convidados:3, cafe:'Café simples', kit:'Kit geral'},
+      {data:[2026,11,4], ini:'14:00', fim:'16:00', titulo:'Reuniões fixas: Gisele e Logística/Açougue', local:'Sala de Treinamento', setores:'Logística, Compras e Açougue', formato:'Presencial', convidados:6, cafe:'Café simples', kit:'Kit geral'}
+    ]},
+    {nome:'Semana 46', datas:'09/11 a 13/11/2026', dias:[[2026,11,9],[2026,11,10],[2026,11,11],[2026,11,12],[2026,11,13]], reunioes:[
+      {data:[2026,11,10], ini:'08:00', fim:'09:30', titulo:'Integração e Boas Práticas do Novo Colaborador', local:'Sala de Treinamento', setores:'DP, Compras, RH e Qualidade', formato:'Presencial', convidados:5},
+      {data:[2026,11,10], ini:'14:00', fim:'16:00', titulo:'Reunião Orçamentos e Festas de Final de Ano', obs:'Confraternizações das equipes, orçamentos e brindes para os clientes', local:'Sala de Treinamento (Democrata)', setores:'Rafael, Financeiro e Maria Paula', formato:'Presencial', convidados:4},
+      {data:[2026,11,11], ini:'08:30', fim:'12:30', titulo:'Reuniões fixas: Consultoria Elisa', local:'Sala de Treinamento', setores:'Gestão de Pessoas', formato:'Presencial', convidados:3, cafe:'Café simples', kit:'Kit geral'},
+      {data:[2026,11,11], ini:'14:00', fim:'16:00', titulo:'Reuniões fixas: Gisele e Logística/Açougue', local:'Sala de Treinamento', setores:'Logística, Compras e Açougue', formato:'Presencial', convidados:6, cafe:'Café simples', kit:'Kit geral'}
+    ]},
+    {nome:'Semana 47', datas:'16/11 a 20/11/2026', dias:[[2026,11,16],[2026,11,17],[2026,11,18],[2026,11,19],[2026,11,20]],
+     fechados:{'2026-11-20':'Feriado · Dia Nacional de Zumbi e da Consciência Negra'}, reunioes:[
+      {data:[2026,11,18], ini:'08:30', fim:'12:30', titulo:'Reuniões fixas: Consultoria Elisa', local:'Sala de Treinamento', setores:'Gestão de Pessoas', formato:'Presencial', convidados:3, cafe:'Café simples', kit:'Kit geral'},
+      {data:[2026,11,18], ini:'14:00', fim:'16:00', titulo:'Reuniões fixas: Gisele e Logística/Açougue', local:'Sala de Treinamento', setores:'Logística, Compras e Açougue', formato:'Presencial', convidados:6, cafe:'Café simples', kit:'Kit geral'}
+    ]},
+    {nome:'Semana 48', datas:'23/11 a 27/11/2026', dias:[[2026,11,23],[2026,11,24],[2026,11,25],[2026,11,26],[2026,11,27]], reunioes:[
+      {data:[2026,11,24], ini:'07:30', fim:'09:00', titulo:'Integração e Boas Práticas do Novo Colaborador', local:'Sala de Treinamento', setores:'DP, Compras, RH e Qualidade', formato:'Presencial', convidados:5},
+      {data:[2026,11,25], ini:'08:30', fim:'12:30', titulo:'Reuniões fixas: Consultoria Elisa', local:'Sala de Treinamento', setores:'Gestão de Pessoas', formato:'Presencial', convidados:3, cafe:'Café simples', kit:'Kit geral'},
+      {data:[2026,11,25], ini:'14:00', fim:'16:00', titulo:'Reuniões fixas: Gisele e Logística/Açougue', local:'Sala de Treinamento', setores:'Logística, Compras e Açougue', formato:'Presencial', convidados:6, cafe:'Café simples', kit:'Kit geral'},
+      {data:[2026,11,27], ini:'15:30', fim:'16:15', titulo:'Aniversariantes do mês', local:'Sala de Treinamento (Democrata)', setores:'RH', formato:'Presencial'}
+    ]},
+    {nome:'Semana 49', datas:'30/11/2026', dias:[[2026,11,30]], reunioes:[]}
   ];
   var DIAS = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
   var hojeZero = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate()).getTime();
@@ -534,7 +624,7 @@ body.travado{overflow:hidden}
       document.getElementById(a.painel).hidden = !on;
       if (on && foco) t.focus();
     });
-    document.getElementById('cabTitulo').textContent = abas[nome].titulo;
+    document.getElementById('cabTitulo').textContent = nome==='mensal' ? tituloMensal : abas[nome].titulo;
     document.getElementById('cabSub').textContent = abas[nome].sub;
     try { history.replaceState(null,'', nome==='semanal'?'#sala':'#mensal'); } catch(e){}
     window.scrollTo(0,0);
